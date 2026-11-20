@@ -48,6 +48,7 @@ struct App {
     HFONT hFont, hMono;
     std::vector<HWND> ctls;
     int page;
+    std::wstring cfgIni;
 };
 
 static App g;
@@ -747,9 +748,30 @@ static void LoadExample()
         if (!v.empty()) SetComboByValue(g.hGuiMode, _wtoi(v.c_str()));
         v = rd(L"singleinstance", L"");
         if (!v.empty()) SetComboByValue(g.hSingleInstance, _wtoi(v.c_str()));
+        g.cfgIni = ini;
     }
 
     Log(L"[пример] поля заполнены из папки Example");
+}
+static void SaveLoadedConfig()
+{
+    if (g.cfgIni.empty()) return;
+    auto kv = [&](const wchar_t* k, HWND h) {
+        WritePrivateProfileStringW(L"sfx", k, GetText(h).c_str(), g.cfgIni.c_str());
+    };
+    wchar_t num[16];
+    kv(L"installpath", g.hInstallPath);
+    kv(L"runprogram", g.hRunProgram);
+    kv(L"delete", g.hDelete);
+    swprintf(num, 16, L"%d", (int)SendMessageW(g.hMethod, CB_GETCURSEL, 0, 0));
+    WritePrivateProfileStringW(L"sfx", L"method", num, g.cfgIni.c_str());
+    swprintf(num, 16, L"%d", (int)(SendMessageW(g.hX64, BM_GETCHECK, 0, 0) == BST_CHECKED));
+    WritePrivateProfileStringW(L"sfx", L"x64", num, g.cfgIni.c_str());
+    swprintf(num, 16, L"%d", ComboValue(g.hGuiMode));
+    WritePrivateProfileStringW(L"sfx", L"guimode", num, g.cfgIni.c_str());
+    swprintf(num, 16, L"%d", ComboValue(g.hSingleInstance));
+    WritePrivateProfileStringW(L"sfx", L"singleinstance", num, g.cfgIni.c_str());
+    Log(L"[сохранено] параметры в " + g.cfgIni);
 }
 static void CreateUi(HWND hWnd)
 {
@@ -1067,6 +1089,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
             if (code == CBN_SELCHANGE || code == BN_CLICKED) {
                 UpdateModuleInfo();
                 if (g.page == PAGE_CONFIG) RefreshConfigView();
+                SaveLoadedConfig();
             }
             return 0;
         case ID_PAYLOAD_BROWSE: {
@@ -1106,6 +1129,11 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
         case ID_INSTALLPATH:
         case ID_RUNPROGRAM:
         case ID_DELETE:
+            if (code == EN_CHANGE) {
+                if (g.page == PAGE_CONFIG) RefreshConfigView();
+                SaveLoadedConfig();
+            }
+            return 0;
         case ID_PASSWORD:
         case ID_SFXAUTHOR:
         case ID_ARCHIVE:
