@@ -31,7 +31,7 @@ enum {
     ID_PASSWORD, ID_SFXAUTHOR, ID_ARCHIVE, ID_PREEXTRACT, ID_EXECUTEONLOAD,
     ID_BEGINPROMPT,
     ID_PAYLOAD_FOLDER_BROWSE,
-    ID_BUILD = 200, ID_VERIFY, ID_RUN, ID_OPENFOLDER, ID_LOG_CLEAR,
+    ID_BUILD = 200, ID_VERIFY, ID_RUN, ID_OPENFOLDER, ID_LOG_CLEAR, ID_SAVE_CFG,
     ID_FILE_EXIT = 300, ID_FILE_ABOUT, ID_FILE_SAVE, ID_FILE_LOAD,
     ID_HELP_APP = 310, ID_HELP_MODULE, ID_HELP_7ZIP
 };
@@ -755,23 +755,40 @@ static void LoadExample()
 }
 static void SaveLoadedConfig()
 {
-    if (g.cfgIni.empty()) return;
+    if (g.cfgIni.empty()) {
+        Log(L"[конфиг] не загружен: назначьте файл через «Загрузить профиль» или папку Example");
+        SetStatus(L"Конфиг не назначен");
+        return;
+    }
     auto kv = [&](const wchar_t* k, HWND h) {
         WritePrivateProfileStringW(L"sfx", k, GetText(h).c_str(), g.cfgIni.c_str());
     };
+    auto kvp = [&](const wchar_t* k, HWND h) {
+        WritePrivateProfileStringW(L"sfx", k, ToPortablePath(GetText(h)).c_str(), g.cfgIni.c_str());
+    };
     wchar_t num[16];
-    kv(L"installpath", g.hInstallPath);
-    kv(L"runprogram", g.hRunProgram);
-    kv(L"delete", g.hDelete);
+    kv(L"moddir", g.hModDir);
     swprintf(num, 16, L"%d", (int)SendMessageW(g.hMethod, CB_GETCURSEL, 0, 0));
     WritePrivateProfileStringW(L"sfx", L"method", num, g.cfgIni.c_str());
     swprintf(num, 16, L"%d", (int)(SendMessageW(g.hX64, BM_GETCHECK, 0, 0) == BST_CHECKED));
     WritePrivateProfileStringW(L"sfx", L"x64", num, g.cfgIni.c_str());
+    kvp(L"payload", g.hPayload);
+    kvp(L"out", g.hOut);
+    kv(L"installpath", g.hInstallPath);
+    kv(L"runprogram", g.hRunProgram);
+    kv(L"delete", g.hDelete);
+    kv(L"password", g.hPassword);
+    kv(L"sfxauthor", g.hSfxAuthor);
+    kv(L"archive", g.hArchive);
+    kv(L"preextract", g.hPreExtract);
+    kv(L"executeonload", g.hExecuteOnLoad);
+    kv(L"beginprompt", g.hBeginPrompt);
     swprintf(num, 16, L"%d", ComboValue(g.hGuiMode));
     WritePrivateProfileStringW(L"sfx", L"guimode", num, g.cfgIni.c_str());
     swprintf(num, 16, L"%d", ComboValue(g.hSingleInstance));
     WritePrivateProfileStringW(L"sfx", L"singleinstance", num, g.cfgIni.c_str());
-    Log(L"[сохранено] параметры в " + g.cfgIni);
+    Log(L"[конфиг] сохранён: " + g.cfgIni);
+    SetStatus(L"Конфиг сохранён");
 }
 static void CreateUi(HWND hWnd)
 {
@@ -876,11 +893,12 @@ static void CreateUi(HWND hWnd)
     SetWindowLongPtrW(g.hLog, GWLP_USERDATA, -1);
     g.ctls.push_back(g.hLog);
 
-    Button(L"Собрать", 26, 548, 120, 32, ID_BUILD, -1);
-    Button(L"Проверить", 156, 548, 120, 32, ID_VERIFY, -1);
-    Button(L"Запустить", 286, 548, 120, 32, ID_RUN, -1);
-    Button(L"Открыть папку", 416, 548, 140, 32, ID_OPENFOLDER, -1);
-    Button(L"Очистить журнал", 566, 548, 150, 32, ID_LOG_CLEAR, -1);
+    Button(L"Сохранить", 26, 548, 108, 32, ID_SAVE_CFG, -1);
+    Button(L"Собрать", 142, 548, 108, 32, ID_BUILD, -1);
+    Button(L"Проверить", 258, 548, 108, 32, ID_VERIFY, -1);
+    Button(L"Запустить", 374, 548, 108, 32, ID_RUN, -1);
+    Button(L"Открыть папку", 490, 548, 124, 32, ID_OPENFOLDER, -1);
+    Button(L"Очистить журнал", 622, 548, 140, 32, ID_LOG_CLEAR, -1);
 
     g.hStatus = CreateWindowExW(0, STATUSCLASSNAMEW, L"",
                                 WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
@@ -1002,6 +1020,7 @@ static void LoadProfile()
 
     UpdateModuleInfo();
     RefreshConfigView();
+    g.cfgIni = path;
     Log(L"[профиль] загружен: " + path);
 }
 
@@ -1040,6 +1059,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
         int code = HIWORD(wParam);
         switch (id) {
         case ID_BUILD: DoBuild(false); return 0;
+        case ID_SAVE_CFG: SaveLoadedConfig(); return 0;
         case ID_VERIFY: {
             DoBuild(false);
             std::wstring out = ResolvePath(GetText(g.hOut));
@@ -1089,7 +1109,6 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
             if (code == CBN_SELCHANGE || code == BN_CLICKED) {
                 UpdateModuleInfo();
                 if (g.page == PAGE_CONFIG) RefreshConfigView();
-                SaveLoadedConfig();
             }
             return 0;
         case ID_PAYLOAD_BROWSE: {
@@ -1131,7 +1150,6 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
         case ID_DELETE:
             if (code == EN_CHANGE) {
                 if (g.page == PAGE_CONFIG) RefreshConfigView();
-                SaveLoadedConfig();
             }
             return 0;
         case ID_PASSWORD:
