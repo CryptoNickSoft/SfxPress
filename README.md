@@ -4,7 +4,7 @@ SfxPress собирает самораспаковывающиеся устан�
 7zSFX-модуля: модуль `.sfx` + конфигурация в UTF-8 + архив 7z склеиваются в один exe.
 Чистый C++ и Win32 API — без Qt, MFC и .NET.
 
-![SfxPress](screenshots/19-light-native.png)
+![SfxPress](screenshots/main.png)
 
 Портативный комплект: `SfxPress.exe`, `Bin\7z.exe` (7-Zip 26.06), `Bin\Modules\*.sfx`,
 справки в `Bin\*.chm`, готовый пример в `Example\`.
