@@ -416,8 +416,8 @@ static std::wstring BuildConfigText(std::wstring* err)
         return c;
     }
 
-    if (c.size() > 1024 * 1024) {
-        if (err) *err = L"Конфигурация больше 1 МБ: модуль не найдёт ни её, ни архив.";
+    if (c.size() > 2 * 1024 * 1024) {
+        if (err) *err = L"Конфигурация больше 2 МБ: модуль не найдёт ни её, ни архив.";
     }
     return c;
 }
@@ -490,7 +490,7 @@ static unsigned long long FindArchiveOffset(const std::wstring& path)
 {
     FILE* f = _wfopen(path.c_str(), L"rb");
     if (!f) return ULLONG_MAX;
-    std::vector<unsigned char> buf(1 << 20);
+    std::vector<unsigned char> buf(2 << 20);
     size_t n = fread(buf.data(), 1, buf.size(), f);
     fclose(f);
     const unsigned char sig[6] = { 0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C };
@@ -582,8 +582,8 @@ static void DoBuild(bool verifyOnly)
 
     std::string cfgUtf8 = ToUtf8(cfg);
 
-    if (modSize + cfgUtf8.size() > 1024 * 1024) {
-        Log(L"[ошибка] Модуль + конфигурация больше 1 МБ: архив окажется за границей поиска.");
+    if (modSize + cfgUtf8.size() > 2 * 1024 * 1024) {
+        Log(L"[ошибка] Модуль + конфигурация больше 2 МБ: архив окажется за границей поиска.");
         SetStatus(L"Слишком большой заголовок");
         return;
     }
@@ -841,7 +841,7 @@ static void CreateUi(HWND hWnd)
           L"  [модуль .sfx] + [текст конфигурации UTF-8] + [архив]\r\n\r\n"
           L"Можно указать готовый .7z или папку: папка упакуется автоматически\r\n"
           L"(через Bin\\7z.exe рядом с конструктором).\r\n\r\n"
-          L"Конфигурация и начало архива должны попасть в первые 1 МБ файла.",
+          L"Конфигурация и начало архива должны попасть в первые 2 МБ файла.",
           152, 122, 560, 130, PAGE_DATA);
 
     const int y1 = 50, dy = 36;
