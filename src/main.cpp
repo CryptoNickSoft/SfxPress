@@ -777,8 +777,10 @@ static void CreateUi(HWND hWnd)
     AddComboItem(g.hMethod, L"All", 5);
     SendMessageW(g.hMethod, CB_SETCURSEL, 1, 0);
 
-    g.hX86 = Ctl(L"BUTTON", L"x86", BS_AUTORADIOBUTTON | WS_GROUP, 152, 80, 80, 20, ID_X86, PAGE_MODULE);
-    g.hX64 = Ctl(L"BUTTON", L"x64", BS_AUTORADIOBUTTON, 240, 80, 80, 20, ID_X64, PAGE_MODULE);
+    g.hX86 = Ctl(L"BUTTON", L"", BS_AUTORADIOBUTTON | WS_GROUP, 152, 80, 20, 20, ID_X86, PAGE_MODULE);
+    Label(L"x86", 176, 82, 60, 18, PAGE_MODULE);
+    g.hX64 = Ctl(L"BUTTON", L"", BS_AUTORADIOBUTTON, 240, 80, 20, 20, ID_X64, PAGE_MODULE);
+    Label(L"x64", 264, 82, 60, 18, PAGE_MODULE);
     SendMessageW(g.hX86, BM_SETCHECK, BST_CHECKED, 0);
 
     Label(L"Папка модулей:", 26, 114, 120, 20, PAGE_MODULE);
