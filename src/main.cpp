@@ -768,7 +768,7 @@ static void CreateUi(HWND hWnd)
         TabCtrl_InsertItem(g.hTab, i, &ti);
     }
     Label(L"Метод сжатия:", 26, 50, 120, 20, PAGE_MODULE);
-    g.hMethod = Combo(152, 46, 220, 240, ID_METHOD, PAGE_MODULE);
+    g.hMethod = Combo(152, 46, 220, 110, ID_METHOD, PAGE_MODULE);
     AddComboItem(g.hMethod, L"Base (Copy + LZMA)", 0);
     AddComboItem(g.hMethod, L"LZMA", 1);
     AddComboItem(g.hMethod, L"LZMA2", 2);
@@ -813,13 +813,13 @@ static void CreateUi(HWND hWnd)
     Label(L"Delete:", 26, y1 + dy * 2, 110, 20, PAGE_PARAMS);
     g.hDelete = Edit(142, y1 + dy * 2 - 4, 250, ID_DELETE, PAGE_PARAMS, L"%%T");
     Label(L"GUIMode:", 26, y1 + dy * 3, 110, 20, PAGE_PARAMS);
-    g.hGuiMode = Combo(142, y1 + dy * 3 - 4, 250, 200, ID_GUIMODE, PAGE_PARAMS);
+    g.hGuiMode = Combo(142, y1 + dy * 3 - 4, 250, 96, ID_GUIMODE, PAGE_PARAMS);
     AddComboItem(g.hGuiMode, L"0 — обычное окно", 0);
     AddComboItem(g.hGuiMode, L"1 — только прогресс", 1);
     AddComboItem(g.hGuiMode, L"2 — тихий режим", 2);
     SendMessageW(g.hGuiMode, CB_SETCURSEL, 2, 0);
     Label(L"SingleInstance:", 26, y1 + dy * 4, 110, 20, PAGE_PARAMS);
-    g.hSingleInstance = Combo(142, y1 + dy * 4 - 4, 250, 200, ID_SINGLEINSTANCE, PAGE_PARAMS);
+    g.hSingleInstance = Combo(142, y1 + dy * 4 - 4, 250, 96, ID_SINGLEINSTANCE, PAGE_PARAMS);
     AddComboItem(g.hSingleInstance, L"0 — выключено", 0);
     AddComboItem(g.hSingleInstance, L"1 — вторая копия выходит", 1);
     AddComboItem(g.hSingleInstance, L"2 — активировать первую", 2);
