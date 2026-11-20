@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Параметры</title>
+<style>
+body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; color: #222; margin: 16px 20px; }
+h1 { font-size: 16pt; margin: 0 0 10px 0; }
+h2 { font-size: 12pt; margin: 18px 0 6px 0; }
+p, li { line-height: 1.45; }
+code { background: #f2f2f2; padding: 1px 4px; font-family: Consolas, monospace; }
+pre { background: #f6f6f6; border: 1px solid #ddd; padding: 8px 10px; font-family: Consolas, monospace; font-size: 9pt; }
+table { border-collapse: collapse; }
+td, th { border: 1px solid #ccc; padding: 4px 8px; vertical-align: top; }
+</style>
+</head><body>
+<h1>Параметры</h1>
+<table>
+<tr><th>Параметр</th><th>Смысл</th></tr>
+<tr><td>InstallPath</td><td>куда распаковывать; поддерживаются переменные вида <code>%TEMP%</code></td></tr>
+<tr><td>RunProgram</td><td>что запустить после распаковки</td></tr>
+<tr><td>Delete</td><td>что удалить после запуска; <code>%%T</code> — временная папка</td></tr>
+<tr><td>GUIMode</td><td>0 — обычное окно, 1 — только прогресс, 2 — тихий режим</td></tr>
+<tr><td>SingleInstance</td><td>0 — выключено, 1 — вторая копия выходит, 2 — активировать первую</td></tr>
+<tr><td>BeginPrompt</td><td>вопрос перед распаковкой</td></tr>
+<tr><td>Password</td><td>пароль архива (см. раздел «Пароль»)</td></tr>
+<tr><td>SfxAuthor</td><td>подпись автора в окне модуля</td></tr>
+<tr><td>Archive</td><td>имя архива внутри установщика</td></tr>
+<tr><td>PreExtract</td><td>команда до распаковки</td></tr>
+<tr><td>ExecuteOnLoad</td><td>команда сразу после распаковки</td></tr>
+</table>
+<p>Двойные обратные слэши и кавычки в значениях экранируются автоматически.</p>
+</body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>SfxPress</title>
+<style>
+body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; color: #222; margin: 16px 20px; }
+h1 { font-size: 16pt; margin: 0 0 10px 0; }
+h2 { font-size: 12pt; margin: 18px 0 6px 0; }
+p, li { line-height: 1.45; }
+code { background: #f2f2f2; padding: 1px 4px; font-family: Consolas, monospace; }
+pre { background: #f6f6f6; border: 1px solid #ddd; padding: 8px 10px; font-family: Consolas, monospace; font-size: 9pt; }
+table { border-collapse: collapse; }
+td, th { border: 1px solid #ccc; padding: 4px 8px; vertical-align: top; }
+</style>
+</head><body>
+<h1>SfxPress</h1>
+<p>SfxPress собирает SFX-инсталляторы для модифицированного модуля 7zSFX:
+модуль <code>.sfx</code> + конфигурация в UTF-8 + архив 7z склеиваются в один exe.</p>
+
+<h2>Быстрый старт</h2>
+<ol>
+<li>Payload — папка с файлами или готовый <code>.7z</code>.</li>
+<li>Результат — путь к будущему exe.</li>
+<li>Нажмите «Собрать».</li>
+</ol>
+
+<h2>Папки рядом с программой</h2>
+<table>
+<tr><th>Папка</th><th>Назначение</th></tr>
+<tr><td><code>Bin\</code></td><td>архиватор <code>7z.exe</code>, его справка <code>7-zip.chm</code>, справка SfxPress</td></tr>
+<tr><td><code>Bin\Modules\</code></td><td>модули <code>7zsd_*.sfx</code> и русская справка модуля <code>7zSD_RU_plus.chm</code></td></tr>
+<tr><td><code>Example\</code></td><td>готовый пример: поля заполняются автоматически</td></tr>
+</table>
+
+<h2>Разделы справки</h2>
+<ul>
+<li>Сборка и вкладки интерфейса — «Сборка»</li>
+<li>Параметры конфигурации — «Параметры»</li>
+<li>Пароль — «Пароль»</li>
+<li>Пример — «Пример»</li>
+<li>Перенос на другой компьютер — «Портативность»</li>
+</ul>
+</body></html>

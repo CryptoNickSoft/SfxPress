@@ -1,0 +1,9 @@
+build/
+dist/
+help_src/SfxPress.chm
+*.obj
+*.res
+*.exe
+*.pdb
+*.ilk
+*.user

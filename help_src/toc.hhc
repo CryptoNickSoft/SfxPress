@@ -1,0 +1,12 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML><HEAD><meta name="GENERATOR" content="SfxPress">
+</HEAD><BODY>
+<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Обзор"><param name="Local" value="index.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Сборка"><param name="Local" value="build.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Параметры"><param name="Local" value="params.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Пароль"><param name="Local" value="password.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Пример"><param name="Local" value="example.html"></OBJECT>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="Портативность"><param name="Local" value="portable.html"></OBJECT>
+</UL>
+</BODY></HTML>

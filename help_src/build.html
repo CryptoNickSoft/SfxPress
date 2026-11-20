@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Сборка</title>
+<style>
+body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; color: #222; margin: 16px 20px; }
+h1 { font-size: 16pt; margin: 0 0 10px 0; }
+h2 { font-size: 12pt; margin: 18px 0 6px 0; }
+p, li { line-height: 1.45; }
+code { background: #f2f2f2; padding: 1px 4px; font-family: Consolas, monospace; }
+pre { background: #f6f6f6; border: 1px solid #ddd; padding: 8px 10px; font-family: Consolas, monospace; font-size: 9pt; }
+table { border-collapse: collapse; }
+td, th { border: 1px solid #ccc; padding: 4px 8px; vertical-align: top; }
+</style>
+</head><body>
+<h1>Сборка</h1>
+<p>Кнопка «Собрать» пишет файл: <code>[модуль .sfx] + [конфигурация UTF-8] + [архив]</code>.</p>
+
+<h2>Вкладки</h2>
+<table>
+<tr><th>Вкладка</th><th>Что задаётся</th></tr>
+<tr><td>Модуль</td><td>метод сжатия, разрядность, папка модулей</td></tr>
+<tr><td>Данные</td><td>payload (папка или .7z) и путь результата</td></tr>
+<tr><td>Параметры</td><td>InstallPath, RunProgram, Delete, GUIMode, SingleInstance и др.</td></tr>
+<tr><td>Конфигурация</td><td>предпросмотр текста, который попадёт в exe</td></tr>
+</table>
+
+<h2>Кнопки</h2>
+<ul>
+<li><b>Собрать</b> — собрать файл по текущим полям.</li>
+<li><b>Проверить</b> — собрать и сразу запустить результат; у примера открывается консоль с сообщением, окно висит до закрытия.</li>
+<li><b>Запустить</b> — открыть уже собранный exe.</li>
+<li><b>Открыть папку</b> — показать результат в Проводнике.</li>
+</ul>
+
+<h2>Ограничение модуля</h2>
+<p>Конфигурация и начало архива должны попасть в первые 1 МБ файла. Если модуль
+и конфигурация больше, SfxPress предупредит и не станет собирать.</p>
+
+<h2>Сборка из командной строки</h2>
+<pre>SfxPress.exe --build --payload=&lt;папка или .7z&gt; --out=&lt;файл.exe&gt; [--install=..] [--run=..] [--password=..]</pre>
+<p>Код возврата: 0 — файл создан, 2 — ошибка.</p>
+</body></html>

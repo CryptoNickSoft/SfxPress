@@ -1,0 +1,19 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=SfxPress.chm
+Contents file=toc.hhc
+Default topic=index.html
+Title=SfxPress - справка
+Language=0x419 Russian
+Display compile progress=No
+Full-text search=Yes
+
+[FILES]
+index.html
+build.html
+params.html
+password.html
+example.html
+portable.html
+
+[INFOTYPES]
