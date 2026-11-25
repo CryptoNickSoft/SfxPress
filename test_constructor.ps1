@@ -91,7 +91,51 @@ if ($made) {
     }
 }
 
-Write-Output "=== 4. запуск интерфейса"
+Write-Output "=== 4. многотомная сборка (--style=1 --volsize)"
+$volPayload = Join-Path $here 'build\vol_payload'
+$volOut = Join-Path $here 'build\vol_demo.exe'
+$volInst = Join-Path $env:TEMP 'vol_demo'
+$volMarker = Join-Path $env:TEMP 'sfxvol_ctor_marker.txt'
+Remove-Item -LiteralPath $volOut -Force -ErrorAction SilentlyContinue
+Get-ChildItem -LiteralPath (Split-Path $volOut) -Filter 'vol_demo.*' -ErrorAction SilentlyContinue | Remove-Item -Force
+Remove-Item -LiteralPath $volMarker, $volInst -Force -Recurse -ErrorAction SilentlyContinue
+if (-not (Test-Path -LiteralPath $volPayload)) {
+    New-Item -ItemType Directory -Force -Path $volPayload | Out-Null
+    $big = New-Object byte[] (3MB)
+    (New-Object System.Random 7).NextBytes($big)
+    [IO.File]::WriteAllBytes((Join-Path $volPayload 'big.bin'), $big)
+    Set-Content -LiteralPath (Join-Path $volPayload 'hello.txt') -Value 'vol payload' -Encoding Ascii
+@"
+@echo off
+echo ok > "%TEMP%\sfxvol_ctor_marker.txt"
+exit /b 0
+"@ | Set-Content -LiteralPath (Join-Path $volPayload 'run.cmd') -Encoding Ascii
+}
+$vArgs = @(
+    '--build',
+    "--payload=$volPayload",
+    "--out=$volOut",
+    '--install=%TEMP%\vol_demo',
+    '--run=run.cmd',
+    '--style=1',
+    '--volsize=1'
+)
+$vp = Start-Process -FilePath $exe -ArgumentList $vArgs -PassThru -Wait
+Check 'тома: код возврата 0' ($vp.ExitCode -eq 0) ("код=" + $vp.ExitCode)
+$exeMade = Test-Path -LiteralPath $volOut
+Check 'тома: инсталлятор создан' $exeMade
+$cont = @(Get-ChildItem -LiteralPath (Split-Path $volOut) -Filter 'vol_demo.???' -ErrorAction SilentlyContinue)
+Check 'тома: есть продолжения .001…' ($cont.Count -ge 2) ("продолжений " + $cont.Count)
+if ($exeMade -and $cont.Count -ge 1) {
+    $vp2 = Start-Process -FilePath $volOut -PassThru
+    $done2 = $vp2.WaitForExit(60000)
+    Check 'тома: инсталлятор завершился' $done2 ("код=" + $vp2.ExitCode)
+    Start-Sleep -Milliseconds 800
+    Check 'тома: маркер создан (распаковка по томам)' (Test-Path -LiteralPath $volMarker)
+    Check 'тома: папка удалена (Delete=%T)' (-not (Test-Path -LiteralPath $volInst))
+}
+
+Write-Output "=== 5. запуск интерфейса"
 $gui = Start-Process -FilePath $exe -PassThru
 $h = [IntPtr]::Zero
 for ($i = 0; $i -lt 40 -and $h -eq [IntPtr]::Zero; $i++) {
